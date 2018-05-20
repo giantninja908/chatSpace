@@ -1,0 +1,29 @@
+<input type="text" id="textbox" placeholder="Enter Text"/>
+<button id="button">Submit</button>
+<script>
+var loc = window.location, new_uri;
+if (loc.protocol === "https:") {
+    new_uri = "wss:";
+} else {
+    new_uri = "ws:";
+}
+new_uri += "//" + loc.host;
+new_uri += loc.pathname + "/to/ws";
+var connection = new WebSocket(new_uri, ['soap', 'xmpp']);
+//send some data
+connection.onopen = function () {
+  connection.send('Ping'); // Send the message 'Ping' to the server
+};
+document.getElementById("button").onclick=function(){
+  connection.send(document.getElementById("textbox"))
+}
+// Log errors
+connection.onerror = function (error) {
+  console.log('WebSocket Error ' + error);
+};
+
+// Log messages from the server
+connection.onmessage = function (e) {
+  alert('Server: ' + e.data);
+};
+</script>
